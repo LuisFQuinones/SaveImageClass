@@ -78,8 +78,8 @@ public function saveImageS3($image, $name, $type, $folder, $thumbnail, $maxSize 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
-Contributing
+## Contributing
 Contributions are welcome! Please fork this repository and submit a pull request for any improvements or bug fixes.
 
-Author
+## Author
 Luis Fernando Q
