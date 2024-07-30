@@ -12,6 +12,7 @@ The `saveImage` class is a robust PHP solution for uploading and managing images
 - **Thumbnail Generation**: Create and save image thumbnails.
 - **Quality Adjustment**: Dynamically adjust image quality to meet size constraints.
 - **Base64 Handling**: Process images provided in base64 format.
+- **CORS Handling**: Fetch images directly from AWS S3 to avoid CORS errors.
 
 ## Installation
 
@@ -75,6 +76,38 @@ public function saveImageS3($image, $name, $type, $folder, $thumbnail, $maxSize 
 
 - An array containing the status, thumbnail path, and image path or an error message.
 
+## Fetch Image from S3 to Avoid CORS
+
+To avoid CORS errors when fetching images from AWS S3, use the following example:
+```php
+use Aws\S3\S3Client;
+use Aws\Exception\AwsException;
+
+require "../../config/mainModel.php";
+require "../../config/composer/vendor/autoload.php";
+
+$url = $_GET['url'];
+$url = str_replace($GLOBALS["AWS_BUCKET_URL"], '', $url);
+
+$BD = new BD();
+$s3Options = $BD->s3Options();
+
+$s3 = new S3Client($s3Options);
+
+try {
+    $result = $s3->getObject([
+        'Bucket' => $GLOBALS["AWS_BUCKET"],
+        'Key' => $url
+    ]);
+
+    header('Content-Type: ' . $result['ContentType']);
+    header('Content-Length: ' . $result['ContentLength']);
+    echo $result['Body'];
+} catch (AwsException $e) {
+    echo $e->getMessage();
+}
+```
+
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
@@ -82,4 +115,4 @@ This project is licensed under the MIT License. See the LICENSE file for details
 Contributions are welcome! Please fork this repository and submit a pull request for any improvements or bug fixes.
 
 ## Author
-Luis Fernando Q
+Luis Fernando Quiñones.
